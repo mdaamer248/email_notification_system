@@ -1,0 +1,35 @@
+openapi: 3.0.0
+info:
+  title: Email Notification System
+  description: API documentation for sending emails
+  version: 1.0.0
+paths:
+  /api/emails/send:
+    post:
+      summary: Send an email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                receiverName:
+                  type: string
+                  example: reciepientName
+                receiverAddress:
+                  type: string
+                  example: recipient@example.com
+                subject:
+                  type: string
+                  example: Test Email
+                textMessage:
+                  type: string
+                  example: Hello, this is a test email!
+      responses:
+        "200":
+          description: Email queued for sending
+        "400":
+          description: Invalid request body
+        "500":
+          description: Internal server error
