@@ -9,6 +9,7 @@ const sendEmailToReciever = async (emailDetails) => {
 
     console.log({ email });
     sendToEmailQueue({ ...emailDetails, _id: email._id });
+    return { _id: email._id };
   } catch (error) {
     console.error(error);
     throw error;
@@ -38,4 +39,16 @@ consumeEmailQueue(async (emailDetails, done) => {
   }
 });
 
-module.exports = { sendEmailToReciever };
+const getEmailStatus = async (emailId) => {
+  try {
+    const email = await Email.findOne({ _id: emailId });
+    if (!email) throw new Error("No email exists with this id.");
+
+    return email.status;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+module.exports = { sendEmailToReciever, getEmailStatus };

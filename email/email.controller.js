@@ -3,8 +3,19 @@ const emailService = require("./email.service");
 const router = express.Router();
 router.post("/send", async (req, res) => {
   try {
-    await emailService.sendEmailToReciever(req.body);
-    res.status(200).send({ message: "Email queued for sending" });
+    const emailId = await emailService.sendEmailToReciever(req.body);
+    res.status(200).send({ message: "Email queued for sending", emailId });
+  } catch (error) {
+    console.error(error);
+    res.status(400).send(error.message);
+  }
+});
+
+router.get("/status/:emailId", async (req, res) => {
+  try {
+    const emailId = req.params.emailId;
+    const status = await emailService.getEmailStatus(emailId);
+    res.status(200).send({ emailId, status });
   } catch (error) {
     console.error(error);
     res.status(400).send(error.message);

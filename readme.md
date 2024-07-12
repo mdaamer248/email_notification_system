@@ -66,6 +66,7 @@ yarn start
 ### API Endpoints
 
 - **POST** /api/emails/send: Endpoint for composing and sending emails
+- **GET** /api/emails/status/:emailId : Endpoint for getting email status by emailId.
 - **POST** /api/webhook: Endpoint for receiving email status updates via webhooks.
 
 ### Additional Notes
