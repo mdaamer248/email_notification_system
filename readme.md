@@ -60,6 +60,11 @@ yarn start
 
 2. **Accessing Swagger Documentation**
 
+- Open your web browser and navigate to http://localhost:4000/api-docs to view the Swagger UI.
+- Use the Swagger UI to explore and test the API endpoints for email composition and status updates.
+
+### API Endpoints
+
 - **POST** /api/emails/send: Endpoint for composing and sending emails
 - **POST** /api/webhook: Endpoint for receiving email status updates via webhooks.
 
