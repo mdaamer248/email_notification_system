@@ -44,11 +44,11 @@ docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
 Create a .env file in the root directory and add the following environment variables:
 
-MONGODB_CONNECTION_STRING = <your-mongodb-uri>
-MAILGUN_API_KEY = <your-mailgun-api-key>
-MAILGUN_DOMAIN = <your-mailgun-domain>
-MAILGUN_ENDPOINT = <your-mailgun-endpoint-to-send-emails>
-MAILGUN_WEBHOOK_SIGNIN_KEY = <your-mailgun-webhook-signin-key>
+- MONGODB_CONNECTION_STRING = <your-mongodb-uri>
+- MAILGUN_API_KEY = <your-mailgun-api-key>
+- MAILGUN_DOMAIN = <your-mailgun-domain>
+- MAILGUN_ENDPOINT = <your-mailgun-endpoint-to-send-emails>
+- MAILGUN_WEBHOOK_SIGNIN_KEY = <your-mailgun-webhook-signin-key>
 
 ### Running the Application
 
