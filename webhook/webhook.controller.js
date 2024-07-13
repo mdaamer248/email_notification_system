@@ -1,11 +1,12 @@
 const express = require("express");
 const webhookService = require("./webhook.service");
-const verify = require("../utils/validate.webhook_signature");
+const { verify } = require("../utils/validate.webhook_signature");
 
 const router = express.Router();
 
 router.post("/", async (req, res) => {
   try {
+    console.log({ body: JSON.stringify(req.body) });
     const { timestamp, token, signature } = req.body.signature;
     const isValid = verify(
       process.env.MAILGUN_WEBHOOK_SIGNIN_KEY,

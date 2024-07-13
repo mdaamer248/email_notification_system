@@ -11,4 +11,4 @@ const verify = (signingKey, timestamp, token, signature) => {
   return encodedToken === signature;
 };
 
-module.export = { verify };
+module.exports = { verify };
