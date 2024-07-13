@@ -9,7 +9,7 @@ const YAML = require("yamljs");
 const swaggerDocument = YAML.load("./swagger.yaml");
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 4000;
 
 // Middleware
 app.use(bodyParser.json());
@@ -26,5 +26,5 @@ app.listen(PORT, () => {
 
 // Get your endpoint online
 ngrok
-  .connect({ addr: 80, authtoken_from_env: true })
+  .connect({ addr: PORT, authtoken_from_env: true })
   .then((listener) => console.log(`Ingress established at: ${listener.url()}`));

@@ -4,7 +4,9 @@ const router = express.Router();
 router.post("/send", async (req, res) => {
   try {
     const emailId = await emailService.sendEmailToReciever(req.body);
-    res.status(200).send({ message: "Email queued for sending", emailId });
+    res
+      .status(200)
+      .send({ _id: emailId._id, message: "Email queued for sending" });
   } catch (error) {
     console.error(error);
     res.status(400).send(error.message);

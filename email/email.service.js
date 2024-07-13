@@ -36,6 +36,7 @@ consumeEmailQueue(async (emailDetails, done) => {
     done();
   } catch (error) {
     console.error("Failed to send email:", error);
+    done(error);
   }
 });
 

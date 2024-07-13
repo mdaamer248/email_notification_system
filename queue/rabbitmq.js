@@ -3,6 +3,8 @@ const amqp = require("amqplib/callback_api");
 const RABBITMQ_URL = "amqp://localhost";
 const EMAIL_QUEUE_NAME = "emailQueue";
 const STATUS_UPDATE_QUEUE = "statusUpdateQueue";
+const RETRY_QUEUE = "retryEmailQueue";
+const MAX_RETRIES = 3;
 
 // Function to connect to RabbitMQ and return the channel
 const connectRabbitMQ = (callback) => {
@@ -16,12 +18,20 @@ const connectRabbitMQ = (callback) => {
       }
       channel.assertQueue(EMAIL_QUEUE_NAME, { durable: true });
       channel.assertQueue(STATUS_UPDATE_QUEUE, { durable: true });
+      channel.assertQueue(RETRY_QUEUE, {
+        durable: true,
+        arguments: {
+          "x-dead-letter-exchange": "",
+          "x-dead-letter-routing-key": "emailQueue",
+        },
+      });
+
       callback(channel);
     });
   });
 };
 
-// Function to send a message to the queue
+// Function to send a message to the email queue
 const sendToEmailQueue = (message) => {
   connectRabbitMQ((channel) => {
     channel.sendToQueue(
@@ -34,13 +44,35 @@ const sendToEmailQueue = (message) => {
   });
 };
 
-// Function to consume messages from the queue
+// Function to consume messages from the email queue with retry mechanism
 const consumeEmailQueue = (callback) => {
   connectRabbitMQ((channel) => {
     channel.consume(EMAIL_QUEUE_NAME, (msg) => {
       if (msg !== null) {
-        callback(JSON.parse(msg.content.toString()), () => {
-          channel.ack(msg);
+        const content = JSON.parse(msg.content.toString());
+        const retryCount = msg.properties.headers["x-retry-count"] || 0;
+
+        callback(content, (err) => {
+          if (err && retryCount < MAX_RETRIES) {
+            // If there's an error and we haven't exceeded max retries
+            const newRetryCount = retryCount + 1;
+            const delay = 1000 * 2 ** newRetryCount;
+
+            channel.sendToQueue(RETRY_QUEUE, msg.content, {
+              persistent: true,
+              headers: { "x-retry-count": newRetryCount },
+              expiration: delay.toString(),
+            });
+            channel.ack(msg);
+          } else if (err) {
+            console.error(
+              `Max retries reached for message: ${JSON.stringify(content)}`
+            );
+
+            channel.ack(msg);
+          } else {
+            channel.ack(msg);
+          }
         });
       }
     });
