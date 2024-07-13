@@ -1,11 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+require("./database/db.connection");
 const emailController = require("./email/email.controller");
 const webhookController = require("./webhook/webhook.controller");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 const swaggerDocument = YAML.load("./swagger.yaml");
-require("./database/db.connection");
 
 const app = express();
 const PORT = process.env.PORT || 4000;

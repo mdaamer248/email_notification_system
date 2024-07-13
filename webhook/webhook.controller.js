@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
     if (!isValid)
       throw new Error("This webhook did not originated from Mailgun.");
 
-    await webhookService.getEmailStauts(req.body["event-data"]);
+    await webhookService.getEmailStatus(req.body["event-data"]);
     res.status(200).send({ message: "Webhook received successfully" });
   } catch (error) {
     console.error("Failed to handle webhook:", error);
